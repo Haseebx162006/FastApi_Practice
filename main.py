@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from database import session, engine
 import db_models  # SQLAlchemy ORM model
@@ -8,7 +9,13 @@ from ProductModel import Product  # Pydantic model
 db_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Product API")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+     allow_credentials=True,
+    allow_methods=["*"],                       # allows all methods (GET, POST, etc.)
+    allow_headers=["*"]  
+)
 # ---------- Routes ----------
 @app.get("/")
 def greet():
@@ -45,7 +52,7 @@ def Add_Products(product: Product):
     return product
 
 
-@app.post("/products/{id}",response_model=Product)
+@app.put("/products/{id}")
 def Update(id : int, new_product: Product):
     db= session()
     product=db.query(db_models.Product).filter(db_models.Product.id==id).first()

@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from typing import List
-
 from database import session, engine
 import db_models  # SQLAlchemy ORM model
 from ProductModel import Product  # Pydantic model
